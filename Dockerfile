@@ -2,7 +2,7 @@ FROM python:3-slim-buster
 ENV PYTHONUNBUFFERED 1
 
 # Install the build tools
-# RUN apt update && apt install -y build-essential libgdal-dev
+RUN apt update && apt install -y git
 
 # Make the code directory
 RUN mkdir /code
