@@ -58,7 +58,7 @@ class NotifySunset:
             self.job = schedule.every().day.at(self.timeString).do(self._SendSunsetTime)
 
             # Log that the job has been updated
-            print(f'Job set to run at {self.timeString} UTC')
+            print(f'Job set to run at {self.timeString} {localNotificationTime.tzname()}')
 
     def _Run(self) -> None:
         # Run forever running any pending jobs and sleeping for a second in between
