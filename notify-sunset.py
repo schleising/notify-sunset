@@ -36,14 +36,14 @@ class NotifySunset:
         # Get an aware datetime for tomorrow
         nowTime = datetime.now().astimezone(ZoneInfo('Europe/London')) + timedelta(days=1)
 
-        # Set the datetime to local 9am (still tomorrow)
-        localNotificationTime = nowTime.replace(hour=9, minute=0)
+        # Set the datetime to Europe/london 9am (still tomorrow)
+        londonNotificationTime = nowTime.replace(hour=9, minute=0)
 
-        # Convert 9am tomorrow into UTC
-        utcNotificationTime = localNotificationTime.astimezone(ZoneInfo('UTC'))
+        # Convert 9am tomorrow into local time on this machin
+        localNotificationTime = londonNotificationTime.astimezone()
 
-        # Get the time string for use in scheduling the job
-        timeString = utcNotificationTime.strftime('%H:%M')
+        # Get the local time string for use in scheduling the job
+        timeString = localNotificationTime.strftime('%H:%M')
 
         # If the timestring has changed (i.e., GMT <-> BST changover)
         if self.timeString != timeString:
