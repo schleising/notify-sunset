@@ -1,6 +1,4 @@
-from datetime import datetime, timedelta
 from time import sleep
-from zoneinfo import ZoneInfo
 
 from suntimes import suntimes
 from notify_run import Notify
@@ -9,7 +7,8 @@ import schedule
 class NotifySunset:
     def __init__(self) -> None:
         # Set some safe defaults
-        self.timeString = None
+        self.timeString = "09:00"
+        self.timezone = "Europe/London"
         self.job = None
 
         # Update the time string and job
@@ -33,32 +32,15 @@ class NotifySunset:
         self._UpdateJob()
 
     def _UpdateJob(self) -> None:
-        # Get an aware datetime for tomorrow
-        nowTime = datetime.now().astimezone(ZoneInfo('Europe/London')) + timedelta(days=1)
-
-        # Set the datetime to Europe/london 9am (still tomorrow)
-        londonNotificationTime = nowTime.replace(hour=9, minute=0)
-
-        # Convert 9am tomorrow into local time on this machin
-        localNotificationTime = londonNotificationTime.astimezone()
-
-        # Get the local time string for use in scheduling the job
-        timeString = localNotificationTime.strftime('%H:%M')
-
-        # If the timestring has changed (i.e., GMT <-> BST changover)
-        if self.timeString != timeString:
-            # Update the timestring member
-            self.timeString = timeString
-
             # If a job already exists, cancel it
             if self.job:
                 schedule.cancel_job(self.job)
 
             # Set the schedule to run once a day at the notification time in UTC
-            self.job = schedule.every().day.at(self.timeString).do(self._SendSunsetTime)
+            self.job = schedule.every().day.at(self.timeString, self.timezone).do(self._SendSunsetTime)
 
             # Log that the job has been updated
-            print(f'Job set to run at {self.timeString} {localNotificationTime.tzname()}')
+            print(f'Job set to run at {self.timeString} {self.timezone}')
 
     def _Run(self) -> None:
         # Run forever running any pending jobs and sleeping for a second in between
