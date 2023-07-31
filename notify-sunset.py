@@ -52,9 +52,6 @@ class NotifySunset:
         # Send the string
         notify.send(sunsetString)
 
-        # Update the job if necessary
-        self._UpdateJob()
-
     def _UpdateJob(self) -> None:
             # If a job already exists, cancel it
             if self.job:
